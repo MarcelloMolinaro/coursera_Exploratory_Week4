@@ -8,8 +8,6 @@ library(dplyr)
 
 ##find all SCC with vehicle in SECTOR description.
 motorv <- SCC[grepl("Vehicle", SCC$EI.Sector), ]
-#0r...
-#motorv <- SCC[grepl("On-Road", SCC$EI.Sector), ]
 
 compareMotorv <- NEI %>%
   filter((NEI$fips == "24510" | NEI$fips == "06037") &
@@ -17,38 +15,27 @@ compareMotorv <- NEI %>%
   ) %>% 
     group_by(year, fips) %>% 
       summarise(sumEmissions = sum(Emissions)) %>% arrange(fips)
-agcompMV <- as.data.frame(compareMotorv)
-agcompMV2 <- mutate(agcompMV, difFrom = ifelse(year == 1999, 0, sumEmissions- lag(sumEmissions)))
-
-#old code
-#agcompMV <- setNames(aggregate(compareMotorv$Emissions,
-#                               by = list(compareMotorv$year, compareMotorv$fips), 
-#                               FUN = sum),
-#                     c("Year", "fips", "sumEmissions"))
+groupMV <- as.data.frame(compareMotorv)
+agcompChange <- mutate(groupMV, difFrom = ifelse(year == 1999, 0, sumEmissions- lag(sumEmissions)))
 
 
-library(ggplot)
+library(ggplot2)
 library(gridExtra)
 
-plot1 <- ggplot(data = agcompMV, aes(x = year, y = sumEmissions, color = fips)) +
-  geom_line(size = 2, linetype = 1) +
-  scale_color_discrete(name = "Area", labels = c("Los Angelos County", "Baltimore City"))+
-  labs(title = "Total PM2.5 Vehicle Emissions by Year", y = "PM 2.5 Emissions (tons)")
-
-plot2 <- ggplot(data = agcompMV2, aes(x = year, y = difFrom, color = fips)) +
-  geom_line(size = 2, linetype = 1) +
-  scale_color_discrete(name = "Area", labels = c("Los Angelos County", "Baltimore City"))+
-  labs(title = "Total Change Vehicle Emissions: Year over Year", y = "PM 2.5 Emissions change")
-grid.arrange(plot1, plot2, ncol =2)
-
-
-plot3 <- ggplot(data = agcompMV, aes(x = year, y = sumEmissions)) +
+plot3 <- ggplot(data = groupMV, aes(x = factor(year), y = sumEmissions)) +
   geom_bar(aes(fill = fips), stat = "identity", position = "dodge") +
   scale_fill_discrete(name = "Area", labels = c("Los Angelos County", "Baltimore City"))+
-  labs(title = "Total PM2.5 Vehicle Emissions by Year", y = "PM 2.5 Emissions (tons)")
+  labs(title = "Total PM2.5 Vehicle Emissions by Year",
+       y = "PM 2.5 Emissions (tons)",
+       x = "Year")
 
-plot4 <- ggplot(data = agcompMV2, aes(x = year, y = difFrom)) +
+plot4 <- ggplot(data = agcompMV2, aes(x = factor(year), y = difFrom)) +
   geom_bar(aes(fill = fips), stat = "identity", position = "dodge") +
   scale_fill_discrete(name = "Area", labels = c("Los Angelos County", "Baltimore City"))+
-  labs(title = "Total Change Vehicle Emissions: Vs. Last Year", y = "PM 2.5 Emissions change")
+  labs(title = "Total Change Vehicle Emissions: Vs. Last Year",
+       y = "PM 2.5 Emissions change",
+       x = "Year")
+
+png(file = "plotQ6.png", width = 960, height = 480)
 grid.arrange(plot3, plot4, ncol =2)
+dev.off()

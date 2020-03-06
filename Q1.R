@@ -13,9 +13,9 @@ agAll <- setNames(aggregate(NEI$Emissions, list(NEI$year), FUN = sum), c("Year",
 png(file = "plotQ1.png", width = 480, height = 480)
 
 barplot(agAll$sumEmissions ~ agAll$Year,
-        main = "Total PM2.5 Emission from all sources by Year",
+        main = "Total PM2.5 Emissions in US from all sources by Year",
         xlab = "Year",
-        ylab = "Total PM2.5 Emissions",
+        ylab = "Total PM2.5 Emissions (tons)",
         col = "white")
 
 dev.off()
