@@ -28,4 +28,4 @@ qplot(data = agBaltMV,
       x = Year, 
       y= sumEmissions, 
       geom = "line",
-      main = "Total Emissions from Moror Vehicle sources in Baltimore by Year")
+      main = "Total PM 2.5 Emissions from Motor Vehicle sources in Baltimore by Year")
