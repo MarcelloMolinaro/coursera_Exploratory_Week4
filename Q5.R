@@ -8,12 +8,12 @@ library(dplyr)
 ##find all SCC with vehicle in SECTOR description.
 motorv <- SCC[grepl("Vehicle", SCC$EI.Sector), ]
 
+#filters for BAltimore AND motor vehicle data
 baltMotorv <- NEI %>%
               filter(NEI$fips == 24510 &
                     SCC %in% motorv$SCC)
-#or...
-#baltMotorV <- subset(NEI, NEI$fips == 24510 & SCC %in% motorv$SCC)
 
+#sum of PM2.5 emissions by year
 agBaltMV <- setNames(aggregate(baltMotorv$Emissions,
                               by = list(baltMotorv$year), 
                               FUN = sum),

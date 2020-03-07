@@ -4,8 +4,10 @@
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
+#subset of only Baltimore data
 balt <- subset(NEI, NEI$fips == 24510)
 
+#gets the sum of PM2.5 emissions
 agBaltimore <- setNames(
                   aggregate(balt$Emissions, list(balt$year), FUN = sum),
                c("Year", "sumEmissions"))

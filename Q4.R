@@ -20,10 +20,11 @@ agUScoal <- setNames(aggregate(UScoal$Emissions,
                     c("Year", "sumEmissions"))
 
 library(ggplot2)
+#creates plot 
 ggplot(agUScoal, aes(x = factor(Year), Y = sumEmissions, group = 1)) +
       geom_line(aes(y = agUScoal$sumEmissions), size = 2) +
       labs(title = "Total PM 2.5 Coal Combustion related Source Emissions: All of US by Year",
            y = "Total PM 2.5 Emissions (tons)",
            x= "Year")
-
+#saves plot
 ggsave("plotQ4.png", width = 8, height = 5)
